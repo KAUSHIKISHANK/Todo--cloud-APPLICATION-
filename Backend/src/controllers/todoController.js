@@ -18,7 +18,7 @@ async function createTodo(req, res) {
 async function getTodos(req, res) {
     try {
        const todos = await Todo.find({
-    user: req.user.id
+       user: req.user.id
 });
         res.status(200).json(todos);
     } catch (err) {
@@ -30,10 +30,16 @@ async function updateTodo(req, res) {
         const { id } = req.params;
         const data = req.body;
 
-        Todo.findOneAndUpdate({
+        const todo = await Todo.findOneAndUpdate(
+  {
     _id: id,
-    user: req.user.id
-})
+    user: req.user.id,
+  },
+  data,
+  {
+    new: true,
+  }
+);
 
         if (!todo) {
             return res.status(404).json({
@@ -54,13 +60,14 @@ async function updateTodo(req, res) {
 }
 async function deleteTodo(req, res) {
     try {
-        const { id } = req.params;  
-        
 
-        Todo.findOneAndDelete({
-    _id: id,
-    user: req.user.id
-})
+        const { id } = req.params;
+
+        const todo = await Todo.findOneAndDelete({
+            _id: id,
+            user: req.user.id
+        });
+
         if (!todo) {
             return res.status(404).json({
                 message: "Todo not found"
@@ -68,15 +75,21 @@ async function deleteTodo(req, res) {
         }
 
         return res.status(200).json({
-            message: "Todo deleted successfully",
-            todo
+            success: true,
+            message: "Todo deleted successfully"
         });
+
     } catch (err) {
+
+        console.log(err);
+
         return res.status(500).json({
             message: err.message
         });
+
     }
 }
+
 
 module.exports = {
     createTodo,

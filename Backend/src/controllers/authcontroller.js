@@ -24,7 +24,7 @@ async function registerUser(req, res) {
         res.status(200).json({
             success:true,
             message:"Register API Working",
-            User
+            user
         })
     }
 
@@ -70,10 +70,15 @@ async function loginUser(req,res){
 
   
         return res.status(200).json({
-            success: true,
-            message: "Login Successful",
-            token
-        });
+    success: true,
+    message: "Login Successful",
+    token,
+    user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+    }
+});
     
      
     }
