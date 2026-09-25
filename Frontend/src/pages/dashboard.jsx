@@ -60,14 +60,6 @@ function Dashboard() {
       <main className="dashboard-content">
         <Navbar user={user} search={search} setSearch={setSearch} />
 
-        
-        <div className="welcome-card">
-          <div>
-            <h1>Welcome, {user?.name || "User"}</h1>
-            <p>Small, clean workspace for your daily tasks.</p>
-          </div>
-        </div>
-
        
         <div className="stats">
           <div className="stat-box">

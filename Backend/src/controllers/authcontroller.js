@@ -4,38 +4,68 @@ const bcrypt = require("bcrypt")
 async function registerUser(req, res) {
     try {
         const { name, email, password } = req.body;
-       
-        const existingUser = await User.findOne({ email });
-         if (existingUser) {
+
+        // Validate inputs
+        if (!name || !name.trim()) {
             return res.status(400).json({
                 success: false,
-                message: "User already exists"
-                  })
-                }
+                message: "Full name is required"
+            });
+        }
+
+        if (!email || !email.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required"
+            });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide a valid email address"
+            });
+        }
+
+        if (!password || password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: "Password must be at least 6 characters"
+            });
+        }
+       
+        const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
+        if (existingUser) {
+            return res.status(400).json({
+                success: false,
+                message: "This email is already registered"
+            });
+        }
         
-        
-            const hashedpassword = await bcrypt.hash(password,10);
-             const user = await User.create({name, 
-            email, 
-            password: hashedpassword});
-        console.log(name);
-        console.log(email);
-        console.log(password);
-        res.status(200).json({
-            success:true,
-            message:"Register API Working",
-            user
-        })
+        const hashedpassword = await bcrypt.hash(password, 10);
+        const user = await User.create({
+            name: name.trim(), 
+            email: email.toLowerCase().trim(), 
+            password: hashedpassword
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Account created successfully",
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        });
+    } catch (err) {
+        console.log("REGISTER ERROR:", err);
+        return res.status(500).json({
+            success: false,
+            message: err.message || "Registration failed"
+        });
     }
-
-    catch (err) {
-    console.log("REGISTER ERROR:", err);
-
-    return res.status(500).json({
-        success: false,
-        message: err.message
-    });
-}
 }
 
 async function loginUser(req,res){
