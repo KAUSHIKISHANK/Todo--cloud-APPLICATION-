@@ -4,7 +4,10 @@ async function createTodo(req, res) {
     try {
         const data = req.body;
 
-        const todo = await Todo.create(data);
+        const todo = await Todo.create({
+            title: req.body.title,
+            user: req.user.id
+        });
 
         res.status(201).json(todo);
     } catch (err) {
@@ -14,7 +17,9 @@ async function createTodo(req, res) {
 
 async function getTodos(req, res) {
     try {
-        const todos = await Todo.find();
+       const todos = await Todo.find({
+       user: req.user.id
+});
         res.status(200).json(todos);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -25,13 +30,16 @@ async function updateTodo(req, res) {
         const { id } = req.params;
         const data = req.body;
 
-        const todo = await Todo.findByIdAndUpdate(
-            id,
-            data,
-            {
-                returnDocument: "after"
-            }
-        );
+        const todo = await Todo.findOneAndUpdate(
+  {
+    _id: id,
+    user: req.user.id,
+  },
+  data,
+  {
+    new: true,
+  }
+);
 
         if (!todo) {
             return res.status(404).json({
@@ -52,10 +60,13 @@ async function updateTodo(req, res) {
 }
 async function deleteTodo(req, res) {
     try {
-        const { id } = req.params;  
-        
 
-        const todo = await Todo.findByIdAndDelete(id);
+        const { id } = req.params;
+
+        const todo = await Todo.findOneAndDelete({
+            _id: id,
+            user: req.user.id
+        });
 
         if (!todo) {
             return res.status(404).json({
@@ -64,15 +75,21 @@ async function deleteTodo(req, res) {
         }
 
         return res.status(200).json({
-            message: "Todo deleted successfully",
-            todo
+            success: true,
+            message: "Todo deleted successfully"
         });
+
     } catch (err) {
+
+        console.log(err);
+
         return res.status(500).json({
             message: err.message
         });
+
     }
 }
+
 
 module.exports = {
     createTodo,

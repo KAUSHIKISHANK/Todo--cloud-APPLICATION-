@@ -1,0 +1,28 @@
+.dashboard-container{
+display:flex;
+background:transparent;
+min-height:100vh;
+}
+
+.dashboard-content{
+margin-left:260px;
+width:calc(100% - 260px);
+min-height:100vh;
+padding:20px;
+}
+
+.welcome-card{
+margin-top:6px;
+}
+
+.stats{
+margin:22px 0 20px;
+}
+
+@media (max-width: 1024px){
+    .dashboard-content{
+        margin-left:0;
+        width:100%;
+        padding:18px;
+    }
+}

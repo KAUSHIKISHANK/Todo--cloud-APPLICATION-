@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../../Middleware/authmiddleware");
+router.use (auth);
 
 const { createTodo } = require("../controllers/todoController");
 
