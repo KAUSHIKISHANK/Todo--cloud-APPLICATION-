@@ -1,25 +1,11 @@
-const mongoose = require('mongoose');
-require("dotenv").config();
-const request = require("supertest");
-const{mongomemoryserver} = require('mongodb-memory-server');
-let mongoServer;
+const mongoose = require("mongoose");
 
-beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-
-  const uri = mongoServer.getUri();
-
-  await mongoose.connect(uri);
-});
-afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-});
 async function connectDB() {
     try {
-       await mongoose.connect(process.env.MONGO_URI, {
-        dbName: process.env.MONGO_DB_NAME || "Usernotes",
-       });
+        await mongoose.connect(process.env.MONGO_URI, {
+            dbName: process.env.MONGO_DB_NAME || "Usernotes",
+        });
+
         console.log("Database Connected Successfully");
         return true;
     }
