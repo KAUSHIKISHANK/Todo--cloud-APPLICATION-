@@ -1,4 +1,20 @@
 const mongoose = require('mongoose');
+require("dotenv").config();
+const request = require("supertest");
+const{mongomemoryserver} = require('mongodb-memory-server');
+let mongoServer;
+
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+
+  const uri = mongoServer.getUri();
+
+  await mongoose.connect(uri);
+});
+afterAll(async () => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
 async function connectDB() {
     try {
        await mongoose.connect(process.env.MONGO_URI, {
