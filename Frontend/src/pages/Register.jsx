@@ -79,7 +79,7 @@ function Register() {
     setLoading(true);
 
     try {
-      await API.post("/auth/register", form);
+      await API.post("/api/auth/register", form);
       setMessage("Account created successfully. Redirecting to sign in...");
       setMessageType("success");
       setForm({ name: "", email: "", password: "" });
