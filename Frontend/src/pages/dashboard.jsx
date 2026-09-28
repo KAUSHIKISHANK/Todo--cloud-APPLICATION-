@@ -95,7 +95,9 @@ function Dashboard() {
               </div>
             </div>
 
-            <TodoForm fetchTodos={fetchTodos} />
+             {filter === "all" && (
+  <TodoForm fetchTodos={fetchTodos} />
+)}
           </>
         )}
 
