@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import API from "../services/api";
 
 import Sidebar from "../Components/sidebar";
@@ -14,7 +14,14 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const [todos, setTodos] = useState([]);
-  const [filter, setFilter] = useState("all");
+ const location = useLocation();
+
+const filter =
+  location.pathname === "/pending"
+    ? "pending"
+    : location.pathname === "/completed"
+    ? "completed"
+    : "all";
   const [search, setSearch] = useState("");
   const [user] = useState(() =>
     JSON.parse(localStorage.getItem("user"))
@@ -42,18 +49,23 @@ function Dashboard() {
   const completed = todos.filter((todo) => todo.completed).length;
   const pending = todos.length - completed;
 
-  const filteredTodos = todos.filter((todo) => {
-    const matchesSearch = todo.title
-      .toLowerCase()
-      .includes(search.trim().toLowerCase());
+ const filteredTodos = todos.filter((todo) => {
+  const matchesSearch = todo.title
+    .toLowerCase()
+    .includes(search.trim().toLowerCase());
 
-    if (!matchesSearch) return false;
+  if (!matchesSearch) return false;
 
-    if (filter === "pending") return !todo.completed;
-    if (filter === "completed") return todo.completed;
+  if (filter === "pending") {
+    return todo.completed === false;
+  }
 
-    return true;
-  });
+  if (filter === "completed") {
+    return todo.completed === true;
+  }
+
+  return true;
+});
 
   const noMatchingTodos =
     todos.length > 0 && filteredTodos.length === 0;
