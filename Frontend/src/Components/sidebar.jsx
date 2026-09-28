@@ -2,14 +2,13 @@ import "./sidebar.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
-  ListTodo,
   Clock3,
   CheckCircle2,
   Home,
   LogOut,
 } from "lucide-react";
 
-export default function Sidebar({ filter, setFilter, onLogout, isDashboard = true }) {
+export default function Sidebar({ onLogout }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,12 +17,16 @@ export default function Sidebar({ filter, setFilter, onLogout, isDashboard = tru
       <div>
         <button className="logo-button" onClick={() => navigate("/home")}>
           <div className="logo">
-            <h1>Task<span>Flow</span></h1>
+            <h1>
+              Task<span>Flow</span>
+            </h1>
             <p>Simple. Focused. Productive.</p>
           </div>
         </button>
 
         <nav className="sidebar-nav">
+
+          {/* Overview */}
           <button
             className={location.pathname === "/home" ? "active" : ""}
             onClick={() => navigate("/home")}
@@ -32,46 +35,37 @@ export default function Sidebar({ filter, setFilter, onLogout, isDashboard = tru
             Overview
           </button>
 
+          {/* All Tasks */}
           <button
-            className={location.pathname === "/dashboard" && filter === "all" ? "active" : ""}
-            onClick={() => {
-              navigate("/dashboard");
-              setFilter("all");
-            }}
+            className={location.pathname === "/dashboard" ? "active" : ""}
+            onClick={() => navigate("/dashboard")}
           >
             <LayoutDashboard size={19} />
             All tasks
           </button>
 
-          {isDashboard && (
-            <>
-              <button
-                className={filter === "pending" ? "active" : ""}
-                onClick={() => setFilter("pending")}
-              >
-                <Clock3 size={19} />
-                Pending
-              </button>
+          {/* Pending */}
+          <button
+            className={location.pathname === "/pending" ? "active" : ""}
+            onClick={() => navigate("/pending")}
+          >
+            <Clock3 size={19} />
+            Pending
+          </button>
 
-              <button
-                className={filter === "completed" ? "active" : ""}
-                onClick={() => setFilter("completed")}
-              >
-                <CheckCircle2 size={19} />
-                Completed
-              </button>
-            </>
-          )}
+          {/* Completed */}
+          <button
+            className={location.pathname === "/completed" ? "active" : ""}
+            onClick={() => navigate("/completed")}
+          >
+            <CheckCircle2 size={19} />
+            Completed
+          </button>
 
-          {!isDashboard && (
-            <button onClick={() => navigate("/dashboard")}>
-              <ListTodo size={19} />
-              Task workspace
-            </button>
-          )}
         </nav>
       </div>
 
+      {/* Logout */}
       <button className="logout" onClick={onLogout}>
         <LogOut size={18} />
         Sign out

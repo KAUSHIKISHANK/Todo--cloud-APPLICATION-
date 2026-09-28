@@ -12,10 +12,13 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* Public Routes */}
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
+        {/* Overview */}
         <Route
           path="/home"
           element={
@@ -25,6 +28,7 @@ function App() {
           }
         />
 
+        {/* All Tasks */}
         <Route
           path="/dashboard"
           element={
@@ -34,7 +38,29 @@ function App() {
           }
         />
 
+        {/* Pending Tasks */}
+        <Route
+          path="/pending"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Completed Tasks */}
+        <Route
+          path="/completed"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Unknown Route */}
         <Route path="*" element={<Navigate to="/" replace />} />
+
       </Routes>
     </BrowserRouter>
   );

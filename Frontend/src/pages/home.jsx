@@ -127,15 +127,6 @@ function Home() {
             </div>
           )}
         </section>
-
-        <section className="home-tip">
-          <div>
-            <span>Stay focused</span>
-            <h2>One task at a time.</h2>
-            <p>Use the task workspace to add, search, update and complete your work.</p>
-          </div>
-          <button onClick={() => navigate("/dashboard")}>Open task workspace <ArrowRight size={17} /></button>
-        </section>
       </main>
     </div>
   );
