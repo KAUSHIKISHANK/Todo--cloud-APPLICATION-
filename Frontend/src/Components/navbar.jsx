@@ -15,7 +15,7 @@ function Navbar({ user, search, setSearch }) {
 
       <div className="navbar-left">
         <p className="today">{today}</p>
-        <h2>Overview</h2>
+      
       </div>
 
       <div className="navbar-right">
