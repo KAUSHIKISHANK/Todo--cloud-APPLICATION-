@@ -12,27 +12,28 @@ import "../Components/dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [todos, setTodos] = useState([]);
- const location = useLocation();
-
-const filter =
-  location.pathname === "/pending"
-    ? "pending"
-    : location.pathname === "/completed"
-    ? "completed"
-    : "all";
   const [search, setSearch] = useState("");
   const [user] = useState(() =>
     JSON.parse(localStorage.getItem("user"))
   );
+
+  // Decide filter from current URL
+  const filter =
+    location.pathname === "/pending"
+      ? "pending"
+      : location.pathname === "/completed"
+      ? "completed"
+      : "all";
 
   async function fetchTodos() {
     try {
       const res = await API.get("/api/todos");
       setTodos(res.data);
     } catch (err) {
-      console.log(err);
+      console.log("TODO ERROR:", err);
     }
   }
 
@@ -49,23 +50,23 @@ const filter =
   const completed = todos.filter((todo) => todo.completed).length;
   const pending = todos.length - completed;
 
- const filteredTodos = todos.filter((todo) => {
-  const matchesSearch = todo.title
-    .toLowerCase()
-    .includes(search.trim().toLowerCase());
+  const filteredTodos = todos.filter((todo) => {
+    const matchesSearch = todo.title
+      .toLowerCase()
+      .includes(search.trim().toLowerCase());
 
-  if (!matchesSearch) return false;
+    if (!matchesSearch) return false;
 
-  if (filter === "pending") {
-    return todo.completed === false;
-  }
+    if (filter === "pending") {
+      return todo.completed === false;
+    }
 
-  if (filter === "completed") {
-    return todo.completed === true;
-  }
+    if (filter === "completed") {
+      return todo.completed === true;
+    }
 
-  return true;
-});
+    return true;
+  });
 
   const noMatchingTodos =
     todos.length > 0 && filteredTodos.length === 0;
@@ -73,15 +74,11 @@ const filter =
   return (
     <div className="dashboard">
 
-      <Sidebar
-        filter={filter}
-        setFilter={setFilter}
-        onLogout={handleLogout}
-      />
+      <Sidebar onLogout={handleLogout} />
 
       <main className="dashboard-content">
 
-        {/* OVERVIEW ONLY */}
+        {/* ALL TASKS */}
         {filter === "all" && (
           <>
             <Navbar
@@ -107,33 +104,34 @@ const filter =
               </div>
             </div>
 
-             {filter === "all" && (
-  <TodoForm fetchTodos={fetchTodos} />
-)}
+            <TodoForm fetchTodos={fetchTodos} />
           </>
         )}
 
-        {/* PENDING HEADER */}
+        {/* PENDING */}
         {filter === "pending" && (
           <div className="page-title">
             <p>Task Management</p>
             <h1>Pending Tasks</h1>
-            <span>{pending} pending task{pending !== 1 ? "s" : ""}</span>
+            <span>
+              {pending} pending task{pending !== 1 ? "s" : ""}
+            </span>
           </div>
         )}
 
-        {/* COMPLETED HEADER */}
+        {/* COMPLETED */}
         {filter === "completed" && (
           <div className="page-title">
             <p>Task Management</p>
             <h1>Completed Tasks</h1>
-            <span>{completed} completed task{completed !== 1 ? "s" : ""}</span>
+            <span>
+              {completed} completed task{completed !== 1 ? "s" : ""}
+            </span>
           </div>
         )}
 
         {/* TASK LIST */}
         <div className="todo-list">
-
           {filteredTodos.length === 0 ? (
             noMatchingTodos ? (
               <div className="empty">
@@ -147,7 +145,7 @@ const filter =
                   className="show-btn"
                   onClick={() => {
                     setSearch("");
-                    setFilter("all");
+                    navigate("/dashboard");
                   }}
                 >
                   Clear search
@@ -165,7 +163,6 @@ const filter =
               />
             ))
           )}
-
         </div>
 
       </main>
