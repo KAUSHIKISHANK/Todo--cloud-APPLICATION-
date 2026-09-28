@@ -31,7 +31,7 @@ function Login() {
     setMessage("");
 
     try {
-      const res = await API.post("/auth/login", form);
+      const res = await API.post("/api/auth/login", form);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       navigate("/home");
