@@ -13,20 +13,25 @@ function Home() {
 
   function getGreeting() {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 17) return "Good afternoon";
-    if (hour < 21) return "Good evening";
-    return "Good night";
+    if (hour < 12) return "Good Morning";
+    if (hour < 17) return "Good Afternoon";
+    if (hour < 21) return "Good Evening";
+    return "Good Night";
   }
 
   async function fetchTodos() {
-    try {
-      const res = await API.get("/todos");
-      setTodos(res.data);
-    } catch (err) {
-      console.log(err);
-    }
+  try {
+    const res = await API.get("/todos");
+    console.log("HOME TODOS:", res.data);
+    setTodos(res.data);
+  } catch (err) {
+    console.log(
+      "HOME TODO ERROR:",
+      err.response?.status,
+      err.response?.data
+    );
   }
+}
 
   useEffect(() => {
     fetchTodos();
