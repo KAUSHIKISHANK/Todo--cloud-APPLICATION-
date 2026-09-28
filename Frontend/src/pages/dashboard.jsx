@@ -12,10 +12,13 @@ import "../Components/dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
+
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [user] = useState(() => JSON.parse(localStorage.getItem("user")));
+  const [user] = useState(() =>
+    JSON.parse(localStorage.getItem("user"))
+  );
 
   async function fetchTodos() {
     try {
@@ -48,41 +51,75 @@ function Dashboard() {
 
     if (filter === "pending") return !todo.completed;
     if (filter === "completed") return todo.completed;
+
     return true;
   });
 
-  const noMatchingTodos = todos.length > 0 && filteredTodos.length === 0;
+  const noMatchingTodos =
+    todos.length > 0 && filteredTodos.length === 0;
 
   return (
     <div className="dashboard">
-      <Sidebar filter={filter} setFilter={setFilter} onLogout={handleLogout} />
+
+      <Sidebar
+        filter={filter}
+        setFilter={setFilter}
+        onLogout={handleLogout}
+      />
 
       <main className="dashboard-content">
-        <Navbar user={user} search={search} setSearch={setSearch} />
 
-       
-        <div className="stats">
-          <div className="stat-box">
-            <h2>{todos.length}</h2>
-            <p>Total Tasks</p>
+        {/* OVERVIEW ONLY */}
+        {filter === "all" && (
+          <>
+            <Navbar
+              user={user}
+              search={search}
+              setSearch={setSearch}
+            />
+
+            <div className="stats">
+              <div className="stat-box">
+                <h2>{todos.length}</h2>
+                <p>Total Tasks</p>
+              </div>
+
+              <div className="stat-box">
+                <h2>{pending}</h2>
+                <p>Pending</p>
+              </div>
+
+              <div className="stat-box">
+                <h2>{completed}</h2>
+                <p>Completed</p>
+              </div>
+            </div>
+
+            <TodoForm fetchTodos={fetchTodos} />
+          </>
+        )}
+
+        {/* PENDING HEADER */}
+        {filter === "pending" && (
+          <div className="page-title">
+            <p>Task Management</p>
+            <h1>Pending Tasks</h1>
+            <span>{pending} pending task{pending !== 1 ? "s" : ""}</span>
           </div>
+        )}
 
-          <div className="stat-box">
-            <h2>{pending}</h2>
-            <p>Pending</p>
+        {/* COMPLETED HEADER */}
+        {filter === "completed" && (
+          <div className="page-title">
+            <p>Task Management</p>
+            <h1>Completed Tasks</h1>
+            <span>{completed} completed task{completed !== 1 ? "s" : ""}</span>
           </div>
+        )}
 
-          <div className="stat-box">
-            <h2>{completed}</h2>
-            <p>Completed</p>
-          </div>
-        </div>
-
-        
-        <TodoForm fetchTodos={fetchTodos} />
-
-       
+        {/* TASK LIST */}
         <div className="todo-list">
+
           {filteredTodos.length === 0 ? (
             noMatchingTodos ? (
               <div className="empty">
@@ -91,6 +128,7 @@ function Dashboard() {
                 <p>
                   Clear the search box or switch back to all tasks.
                 </p>
+
                 <button
                   className="show-btn"
                   onClick={() => {
@@ -113,11 +151,12 @@ function Dashboard() {
               />
             ))
           )}
+
         </div>
+
       </main>
     </div>
   );
 }
 
-export default Dashboard; 
-
+export default Dashboard;
