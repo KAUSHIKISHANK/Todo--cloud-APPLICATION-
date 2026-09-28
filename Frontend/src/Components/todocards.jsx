@@ -27,7 +27,7 @@ function TodoCard({ todo, fetchTodos }) {
 
     try {
       setLoading(true);
-      await API.patch(`/todos/${todo._id}`, {
+      await API.patch(`/api/todos/${todo._id}`, {
         title: editTitle.trim(),
       });
 
