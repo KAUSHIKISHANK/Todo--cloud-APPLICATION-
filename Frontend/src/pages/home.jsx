@@ -21,7 +21,7 @@ function Home() {
 
   async function fetchTodos() {
   try {
-    const res = await API.get("/todos");
+    const res = await API.get("/api/todos");
     console.log("HOME TODOS:", res.data);
     setTodos(res.data);
   } catch (err) {
