@@ -17,7 +17,7 @@ function TodoForm({ fetchTodos }) {
 
     try {
 
-      await API.post("/todos", {
+      await API.post("/api/todos", {
         title,
       });
 
