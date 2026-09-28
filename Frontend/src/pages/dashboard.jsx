@@ -19,7 +19,7 @@ function Dashboard() {
 
   async function fetchTodos() {
     try {
-      const res = await API.get("/todos");
+      const res = await API.get("/api/todos");
       setTodos(res.data);
     } catch (err) {
       console.log(err);

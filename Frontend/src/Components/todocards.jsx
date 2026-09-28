@@ -10,7 +10,7 @@ function TodoCard({ todo, fetchTodos }) {
   async function deleteTodo() {
     try {
       setLoading(true);
-      await API.delete(`/todos/${todo._id}`);
+      await API.delete(`/api/todos/${todo._id}`);
       fetchTodos();
     } catch (err) {
       console.log(err);
